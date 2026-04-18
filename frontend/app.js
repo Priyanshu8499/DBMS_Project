@@ -1,4 +1,5 @@
-const API_BASE = "http://127.0.0.1:8000";
+const isLocalHost = ["127.0.0.1", "localhost"].includes(window.location.hostname);
+const API_BASE = isLocalHost ? "http://127.0.0.1:8000" : "/api";
 
 async function request(path, options = {}) {
     const config = {

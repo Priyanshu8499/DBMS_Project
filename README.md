@@ -70,6 +70,37 @@ Open these files in your browser:
 - `frontend/index.html`
 - `frontend/admin.html`
 
+## Vercel Deployment
+
+Deploy this repo as two separate Vercel projects:
+
+1. Backend project
+   - Root Directory: `backend`
+   - Entry file: `backend/app.py`
+   - Install dependencies from `backend/requirements.txt`
+   - Add environment variables:
+     - `MEDICAL_DB_HOST`
+     - `MEDICAL_DB_USER`
+     - `MEDICAL_DB_PASSWORD`
+     - `MEDICAL_DB_NAME`
+
+2. Frontend project
+   - Root Directory: `frontend`
+   - Static site deployment
+
+Before deploying the frontend, update `frontend/vercel.json` and replace:
+
+```text
+https://YOUR-BACKEND-PROJECT.vercel.app
+```
+
+with your real backend Vercel URL.
+
+The frontend uses:
+
+- `http://127.0.0.1:8000` during local development
+- `/api` in production through the Vercel rewrite
+
 ## Notes
 
 - Make sure your MySQL database and required tables already exist.
