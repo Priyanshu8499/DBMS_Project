@@ -3,6 +3,7 @@ from datetime import date, datetime, timedelta
 import hashlib
 import os
 from pathlib import Path
+import tempfile
 from typing import Any
 
 import mysql.connector
@@ -56,13 +57,48 @@ DOCTOR_NAME_PHOTOS = {
 }
 
 
+def env_flag(name: str, default: bool = False) -> bool:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def get_ssl_ca_path() -> str | None:
+    ssl_ca = os.getenv("MEDICAL_DB_SSL_CA")
+    if ssl_ca:
+        return ssl_ca
+
+    ssl_ca_content = os.getenv("MEDICAL_DB_SSL_CA_CONTENT")
+    if not ssl_ca_content:
+        return None
+
+    cert_path = Path(tempfile.gettempdir()) / "medical-db-ca.pem"
+    cert_path.write_text(ssl_ca_content, encoding="utf-8")
+    return str(cert_path)
+
+
 def get_db():
-    return mysql.connector.connect(
-        host=os.getenv("MEDICAL_DB_HOST", "localhost"),
-        user=os.getenv("MEDICAL_DB_USER", "root"),
-        password=os.getenv("MEDICAL_DB_PASSWORD"),
-        database=os.getenv("MEDICAL_DB_NAME", "medical_system"),
-    )
+    config = {
+        "host": os.getenv("MEDICAL_DB_HOST", "localhost"),
+        "user": os.getenv("MEDICAL_DB_USER", "root"),
+        "password": os.getenv("MEDICAL_DB_PASSWORD"),
+        "database": os.getenv("MEDICAL_DB_NAME", "medical_system"),
+        "port": int(os.getenv("MEDICAL_DB_PORT", "3306")),
+    }
+
+    ssl_ca = get_ssl_ca_path()
+    if ssl_ca:
+        config["ssl_ca"] = ssl_ca
+
+    if "MEDICAL_DB_SSL_DISABLED" in os.environ:
+        config["ssl_disabled"] = env_flag("MEDICAL_DB_SSL_DISABLED")
+
+    if "MEDICAL_DB_SSL_VERIFY_CERT" in os.environ:
+        config["ssl_verify_cert"] = env_flag("MEDICAL_DB_SSL_VERIFY_CERT")
+
+    return mysql.connector.connect(**config)
+
 
 
 @contextmanager
