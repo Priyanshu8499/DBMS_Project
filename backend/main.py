@@ -254,7 +254,7 @@ def home():
 @app.post("/admin/login", response_model=ApiMessage)
 def admin_login(data: AdminLogin):
     with db_cursor(dictionary=True) as (_, cursor):
-        cursor.execute("SELECT * FROM Admin WHERE username = %s", (data.username,))
+        cursor.execute("SELECT * FROM admin WHERE username = %s", (data.username,))
         user = cursor.fetchone()
 
     if not user or not verify_password(data.password, user.get("password", "")):
@@ -266,14 +266,14 @@ def admin_login(data: AdminLogin):
 @app.post("/patient/register", response_model=ApiMessage)
 def register(data: PatientRegister):
     with db_cursor(dictionary=True) as (db, cursor):
-        cursor.execute("SELECT patient_id FROM Patients WHERE email = %s", (data.email,))
+        cursor.execute("SELECT patient_id FROM patients WHERE email = %s", (data.email,))
         existing_user = cursor.fetchone()
         if existing_user:
             raise HTTPException(status_code=409, detail="An account with this email already exists")
 
         cursor.execute(
             """
-            INSERT INTO Patients(name, email, phone, password)
+            INSERT INTO patients(name, email, phone, password)
             VALUES (%s, %s, %s, %s)
             """,
             (data.name, data.email, data.phone, hash_password(data.password)),
@@ -286,7 +286,7 @@ def register(data: PatientRegister):
 @app.post("/patient/login")
 def patient_login(data: PatientLogin):
     with db_cursor(dictionary=True) as (db, cursor):
-        cursor.execute("SELECT * FROM Patients WHERE email = %s", (data.email,))
+        cursor.execute("SELECT * FROM patients WHERE email = %s", (data.email,))
         user = cursor.fetchone()
 
         if not user or not verify_password(data.password, user.get("password", "")):
@@ -294,7 +294,7 @@ def patient_login(data: PatientLogin):
 
         if not str(user.get("password", "")).startswith("sha256$"):
             cursor.execute(
-                "UPDATE Patients SET password = %s WHERE patient_id = %s",
+                "UPDATE patients SET password = %s WHERE patient_id = %s",
                 (hash_password(data.password), user["patient_id"]),
             )
             db.commit()
@@ -311,7 +311,7 @@ def patient_login(data: PatientLogin):
 def get_doctors():
     with db_cursor(dictionary=True) as (_, cursor):
         cursor.execute(
-            "SELECT * FROM Doctors ORDER BY name"
+            "SELECT * FROM doctors ORDER BY name"
         )
         doctors = cursor.fetchall()
 
@@ -321,16 +321,16 @@ def get_doctors():
 @app.get("/dashboard/summary")
 def dashboard_summary():
     with db_cursor(dictionary=True) as (_, cursor):
-        cursor.execute("SELECT COUNT(*) AS total_doctors FROM Doctors")
+        cursor.execute("SELECT COUNT(*) AS total_doctors FROM doctors")
         total_doctors = cursor.fetchone()["total_doctors"]
 
-        cursor.execute("SELECT COUNT(DISTINCT specialization) AS total_specialties FROM Doctors")
+        cursor.execute("SELECT COUNT(DISTINCT specialization) AS total_specialties FROM doctors")
         total_specialties = cursor.fetchone()["total_specialties"]
 
         cursor.execute(
             """
             SELECT COUNT(*) AS upcoming_appointments
-            FROM Appointments
+            FROM appointments
             WHERE appointment_date >= CURDATE()
             """
         )
@@ -355,8 +355,8 @@ def patient_appointments(patient_id: int):
                 d.name AS doctor_name,
                 d.specialization,
                 COALESCE(d.image, '') AS image
-            FROM Appointments a
-            JOIN Doctors d ON d.doctor_id = a.doctor_id
+            FROM appointments a
+            JOIN doctors d ON d.doctor_id = a.doctor_id
             WHERE a.patient_id = %s
             ORDER BY a.appointment_date, a.appointment_time
             """,
@@ -378,18 +378,18 @@ def book(data: Appointment):
         raise HTTPException(status_code=400, detail="Please choose a future appointment time")
 
     with db_cursor(dictionary=True) as (db, cursor):
-        cursor.execute("SELECT patient_id FROM Patients WHERE patient_id = %s", (data.patient_id,))
+        cursor.execute("SELECT patient_id FROM patients WHERE patient_id = %s", (data.patient_id,))
         if not cursor.fetchone():
             raise HTTPException(status_code=404, detail="Patient account not found")
 
-        cursor.execute("SELECT doctor_id FROM Doctors WHERE doctor_id = %s", (data.doctor_id,))
+        cursor.execute("SELECT doctor_id FROM doctors WHERE doctor_id = %s", (data.doctor_id,))
         if not cursor.fetchone():
             raise HTTPException(status_code=404, detail="Doctor not found")
 
         cursor.execute(
             """
             SELECT appointment_id
-            FROM Appointments
+            FROM appointments
             WHERE doctor_id = %s
               AND appointment_date = %s
               AND appointment_time = %s
@@ -401,7 +401,7 @@ def book(data: Appointment):
 
         cursor.execute(
             """
-            INSERT INTO Appointments
+            INSERT INTO appointments
                 (patient_id, doctor_id, appointment_date, appointment_time)
             VALUES (%s, %s, %s, %s)
             """,
@@ -415,19 +415,19 @@ def book(data: Appointment):
 @app.get("/admin/summary")
 def admin_summary():
     with db_cursor(dictionary=True) as (_, cursor):
-        cursor.execute("SELECT COUNT(*) AS total_patients FROM Patients")
+        cursor.execute("SELECT COUNT(*) AS total_patients FROM patients")
         total_patients = cursor.fetchone()["total_patients"]
 
-        cursor.execute("SELECT COUNT(*) AS total_doctors FROM Doctors")
+        cursor.execute("SELECT COUNT(*) AS total_doctors FROM doctors")
         total_doctors = cursor.fetchone()["total_doctors"]
 
-        cursor.execute("SELECT COUNT(*) AS total_appointments FROM Appointments")
+        cursor.execute("SELECT COUNT(*) AS total_appointments FROM appointments")
         total_appointments = cursor.fetchone()["total_appointments"]
 
         cursor.execute(
             """
             SELECT COUNT(*) AS today_appointments
-            FROM Appointments
+            FROM appointments
             WHERE appointment_date = CURDATE()
             """
         )
@@ -456,9 +456,9 @@ def all_appointments():
                 d.doctor_id,
                 d.name AS doctor_name,
                 d.specialization
-            FROM Appointments a
-            JOIN Patients p ON p.patient_id = a.patient_id
-            JOIN Doctors d ON d.doctor_id = a.doctor_id
+            FROM appointments a
+            JOIN patients p ON p.patient_id = a.patient_id
+            JOIN doctors d ON d.doctor_id = a.doctor_id
             ORDER BY a.appointment_date DESC, a.appointment_time DESC
             """
         )
@@ -474,14 +474,14 @@ def all_appointments():
 def cancel_appointment(appointment_id: int):
     with db_cursor(dictionary=True) as (db, cursor):
         cursor.execute(
-            "SELECT appointment_id FROM Appointments WHERE appointment_id = %s",
+            "SELECT appointment_id FROM appointments WHERE appointment_id = %s",
             (appointment_id,),
         )
         if not cursor.fetchone():
             raise HTTPException(status_code=404, detail="Appointment not found")
 
         cursor.execute(
-            "DELETE FROM Appointments WHERE appointment_id = %s",
+            "DELETE FROM appointments WHERE appointment_id = %s",
             (appointment_id,),
         )
         db.commit()
