@@ -2,6 +2,7 @@ from contextlib import contextmanager
 from datetime import date, datetime, timedelta
 import hashlib
 import os
+from pathlib import Path
 from typing import Any
 
 import mysql.connector
@@ -18,6 +19,27 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+def load_local_env() -> None:
+    root_dir = Path(__file__).resolve().parent.parent
+    env_path = root_dir / ".env"
+    if not env_path.exists():
+        return
+
+    for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = value
+
+
+load_local_env()
 
 
 DOCTOR_PHOTOS = {

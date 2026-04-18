@@ -1,6 +1,6 @@
 # MediCare Plus
 
-MediCare Plus is a DBMS major project with a FastAPI backend and a simple HTML/CSS/JavaScript frontend for patient registration, login, appointment booking, and admin-side appointment management.
+MediCare Plus is a DBMS major project with a FastAPI backend and an HTML/CSS/JavaScript frontend for patient registration, login, appointment booking, and admin-side appointment management.
 
 ## Features
 
@@ -38,9 +38,9 @@ frontend/
 pip install -r requirements.txt
 ```
 
-## Environment Variables
+## Local Database Setup
 
-Set these before starting the backend:
+Create a `.env` file in the project root using `.env.example` and set your local MySQL credentials:
 
 ```bash
 MEDICAL_DB_HOST=localhost
@@ -55,7 +55,7 @@ MEDICAL_DB_NAME=medical_system
 uvicorn backend.main:app --reload
 ```
 
-The API will run on:
+The API runs on:
 
 ```text
 http://127.0.0.1:8000
@@ -73,5 +73,5 @@ Open these files in your browser:
 ## Notes
 
 - Make sure your MySQL database and required tables already exist.
-- Do not commit real passwords or private environment files to GitHub.
-- `Appointments` are deleted from the database when an admin cancels a booking.
+- Keep real passwords only in `.env`, not in GitHub.
+- Appointments are deleted from the database when an admin cancels a booking.
