@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Plus | Sign In</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="auth-layout">
+        <section class="auth-copy">
+            <div class="reveal">
+                <div class="brand">
+                    <div class="brand-mark">M+</div>
+                    <span>MediCare Plus</span>
+                </div>
+                <span class="hero-badge" style="margin-top: 28px;">Smart appointments. Faster care.</span>
+                <h1>Healthcare booking that feels premium, calm, and effortless.</h1>
+                <p>
+                    Sign in to access a modern patient experience with specialist discovery,
+                    quick scheduling, and a cleaner admin command center.
+                </p>
+            </div>
+
+            <div class="auth-metrics reveal delay-2">
+                <div class="metric">
+                    <strong>24/7</strong>
+                    <span>Booking access</span>
+                </div>
+                <div class="metric">
+                    <strong>Top Care</strong>
+                    <span>Specialist network</span>
+                </div>
+                <div class="metric">
+                    <strong>One View</strong>
+                    <span>Admin insights</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="auth-card-wrap">
+            <div class="auth-card reveal delay-3">
+                <span class="section-badge">Access Portal</span>
+                <h2>Welcome back</h2>
+                <p class="muted" id="authHint">
+                    Patients can browse specialists, reserve slots, and manage visits.
+                </p>
+
+                <form class="form-stack" onsubmit="login(event)">
+                    <div>
+                        <label class="label" for="role">Login as</label>
+                        <select class="select" id="role" onchange="updateAuthLabels()">
+                            <option value="patient">Patient</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="label" id="identityLabel" for="identityInput">Patient email</label>
+                        <input class="input" id="identityInput" placeholder="Enter your email address">
+                    </div>
+
+                    <div>
+                        <label class="label" for="passwordInput">Password</label>
+                        <input class="input" id="passwordInput" type="password" placeholder="Enter your password">
+                    </div>
+
+                    <button class="button button-primary" type="submit">Continue to Dashboard</button>
+                </form>
+
+                <p class="form-note">
+                    New here? <a href="register.html" style="color: var(--primary); font-weight: 800;">Create a patient account</a>
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>

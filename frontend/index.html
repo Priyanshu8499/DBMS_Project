@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Plus | Patient Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="page-shell topbar-inner">
+            <a class="brand" href="index.html">
+                <div class="brand-mark">M+</div>
+                <span>MediCare Plus</span>
+            </a>
+
+            <div class="nav-actions">
+                <div class="nav-pill">Patient Portal</div>
+                <button class="button button-secondary" onclick="window.location.href='#doctorsSection'">Browse Doctors</button>
+                <button class="button button-accent" onclick="logoutPatient()">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-shell">
+        <section class="hero">
+            <div class="hero-grid">
+                <article class="hero-card reveal">
+                    <div>
+                        <span class="hero-badge">Personal care dashboard</span>
+                        <h1>Book specialist care with confidence, speed, and a more human interface.</h1>
+                        <p>
+                            Welcome back, <strong id="heroPatientName">Patient</strong>. Discover doctors,
+                            compare specialties, and confirm appointments from one polished workspace.
+                        </p>
+                        <div class="hero-actions">
+                            <a class="button button-accent" href="#bookingPanel">Reserve a Slot</a>
+                            <a class="button button-secondary" href="#appointmentsSection">View Appointments</a>
+                        </div>
+                    </div>
+                </article>
+
+                <aside class="panel panel-dark reveal delay-2">
+                    <span class="section-badge" style="background: rgba(255,255,255,0.1); color: #efffff;">Patient Snapshot</span>
+                    <h3>Hello, <span id="welcomeName">Patient</span></h3>
+                    <p>Your care planner keeps upcoming visits, top doctors, and specialty access all in one calm view.</p>
+
+                    <div class="mini-grid">
+                        <div class="metric">
+                            <strong id="doctorMetric">0</strong>
+                            <span>Available doctors</span>
+                        </div>
+                        <div class="metric">
+                            <strong id="specialtyMetric">0</strong>
+                            <span>Specialties</span>
+                        </div>
+                        <div class="metric">
+                            <strong id="appointmentMetric">0</strong>
+                            <span>Upcoming visits</span>
+                        </div>
+                        <div class="metric">
+                            <strong id="doctorCount">0</strong>
+                            <span>Profiles loaded</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="features-grid">
+                <article class="feature-card reveal">
+                    <span class="section-badge">Curated doctors</span>
+                    <h3>Photo-rich specialist profiles</h3>
+                    <p class="muted">Each doctor card is designed to be visual and quick to compare so patients can decide faster.</p>
+                </article>
+                <article class="feature-card reveal delay-2">
+                    <span class="section-badge">Simplified booking</span>
+                    <h3>Book from a focused side panel</h3>
+                    <p class="muted">The form stays nearby while you browse, which keeps the appointment flow short and intuitive.</p>
+                </article>
+                <article class="feature-card reveal delay-3">
+                    <span class="section-badge">Visit timeline</span>
+                    <h3>Track upcoming and past appointments</h3>
+                    <p class="muted">Patients can see their care journey in one place without bouncing across multiple pages.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section" id="doctorsSection">
+            <div class="section-header">
+                <div>
+                    <span class="section-badge">Specialist Discovery</span>
+                    <h2>Choose your doctor</h2>
+                    <p class="muted">Search by name, specialty, or location and then lock in your preferred consultation slot.</p>
+                </div>
+                <div class="search-row">
+                    <input class="search-input" id="doctorSearch" placeholder="Search doctors or specialties" oninput="filterDoctors()">
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="doctor-grid" id="doctorList"></div>
+
+                <aside class="panel booking-panel" id="bookingPanel">
+                    <span class="section-badge">Booking Panel</span>
+                    <h3>Confirm your visit</h3>
+                    <p class="muted">Pick a date and time after selecting a doctor from the gallery.</p>
+
+                    <div class="selected-doctor-preview" id="selectedDoctorPreview"></div>
+
+                    <form class="form-grid" id="bookingForm" onsubmit="bookAppointment(event)">
+                        <div>
+                            <label class="label" for="appointmentDate">Appointment date</label>
+                            <input class="input" id="appointmentDate" type="date">
+                        </div>
+
+                        <div>
+                            <label class="label" for="appointmentTime">Preferred time</label>
+                            <input class="input" id="appointmentTime" type="time">
+                        </div>
+
+                        <button class="button button-primary" type="submit">Book Appointment</button>
+                    </form>
+                </aside>
+            </div>
+        </section>
+
+        <section class="section" id="appointmentsSection">
+            <div class="section-header">
+                <div>
+                    <span class="section-badge">Visit Timeline</span>
+                    <h2>Your appointments</h2>
+                    <p class="muted">A clear summary of active and completed consultations connected to your patient account.</p>
+                </div>
+            </div>
+
+            <div class="appointments-grid" id="appointmentList"></div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Plus | Admin Console</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="page-shell topbar-inner">
+            <a class="brand" href="admin.html">
+                <div class="brand-mark">M+</div>
+                <span>MediCare Plus Admin</span>
+            </a>
+
+            <div class="nav-actions">
+                <div class="nav-pill">Operations View</div>
+                <button class="button button-accent" onclick="logoutAdmin()">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-shell">
+        <section class="hero">
+            <div class="hero-grid">
+                <article class="hero-card reveal" style="background:
+                    linear-gradient(120deg, rgba(8, 52, 52, 0.86), rgba(8, 52, 52, 0.24)),
+                    url('https://images.unsplash.com/photo-1516549655669-df83a0774514?auto=format&fit=crop&w=1600&q=80') center/cover;">
+                    <div>
+                        <span class="hero-badge">Care operations console</span>
+                        <h1>Monitor appointments, patient flow, and specialist demand from one dashboard.</h1>
+                        <p>
+                            This admin view turns raw appointment rows into a more visual, readable operations workspace.
+                        </p>
+                    </div>
+                </article>
+
+                <aside class="panel reveal delay-2">
+                    <span class="section-badge">Live Overview</span>
+                    <h3>Appointment activity</h3>
+                    <p class="muted">Keep a quick pulse on patient volume, doctor coverage, and today's queue.</p>
+                    <div class="mini-grid">
+                        <div class="metric">
+                            <strong id="totalPatients">0</strong>
+                            <span>Patients</span>
+                        </div>
+                        <div class="metric">
+                            <strong id="totalDoctors">0</strong>
+                            <span>Doctors</span>
+                        </div>
+                        <div class="metric">
+                            <strong id="totalAppointments">0</strong>
+                            <span>Total bookings</span>
+                        </div>
+                        <div class="metric">
+                            <strong id="todayAppointments">0</strong>
+                            <span>Today's visits</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <div>
+                    <span class="section-badge">Appointments Ledger</span>
+                    <h2>Manage the booking stream</h2>
+                    <p class="muted">Search the full appointment list by patient, doctor, or specialization.</p>
+                </div>
+                <div class="search-row">
+                    <div class="nav-pill"><span id="adminAppointmentCount">0</span>&nbsp;records</div>
+                    <input class="search-input" id="adminSearch" placeholder="Search by patient name, email, or ID">
+                </div>
+            </div>
+
+            <div class="table-shell">
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Specialty</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal-overlay" id="deleteModal" hidden>
+        <div class="modal-card">
+            <div class="modal-badge">Confirm cancellation</div>
+            <h3>Delete this booking?</h3>
+            <p class="muted">
+                This will permanently remove the appointment from the admin panel and the database.
+            </p>
+
+            <div class="modal-details">
+                <div class="modal-detail">
+                    <span>Patient</span>
+                    <strong id="deletePatientName">-</strong>
+                </div>
+                <div class="modal-detail">
+                    <span>Doctor</span>
+                    <strong id="deleteDoctorName">-</strong>
+                </div>
+                <div class="modal-detail">
+                    <span>Schedule</span>
+                    <strong id="deleteSchedule">-</strong>
+                </div>
+                <div class="modal-detail">
+                    <span>Booking ID</span>
+                    <strong id="deleteAppointmentId">-</strong>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="button button-secondary" type="button" onclick="closeDeleteModal()">
+                    Keep Booking
+                </button>
+                <button class="button button-danger" id="confirmDeleteButton" type="button" onclick="confirmDeleteAppointment()">
+                    Yes, Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

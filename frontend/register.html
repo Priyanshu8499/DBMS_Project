@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Plus | Create Account</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="auth-layout">
+        <section class="auth-copy register-copy">
+            <div class="reveal">
+                <div class="brand">
+                    <div class="brand-mark">M+</div>
+                    <span>MediCare Plus</span>
+                </div>
+                <span class="hero-badge" style="margin-top: 28px;">Patient onboarding</span>
+                <h1>Start with a smoother path to specialist care.</h1>
+                <p>
+                    Build your account once, then book appointments in seconds with a cleaner,
+                    photo-rich experience designed for trust and clarity.
+                </p>
+            </div>
+
+            <div class="auth-metrics reveal delay-2">
+                <div class="metric">
+                    <strong>Fast</strong>
+                    <span>Simple registration</span>
+                </div>
+                <div class="metric">
+                    <strong>Visual</strong>
+                    <span>Doctor profile previews</span>
+                </div>
+                <div class="metric">
+                    <strong>Secure</strong>
+                    <span>Protected credentials</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="auth-card-wrap">
+            <div class="auth-card reveal delay-3">
+                <span class="section-badge">Create Account</span>
+                <h2>Join as a patient</h2>
+                <p class="muted">Use your details once and we'll unlock the full appointment dashboard.</p>
+
+                <form class="form-stack" onsubmit="registerPatient(event)">
+                    <div>
+                        <label class="label" for="registerName">Full name</label>
+                        <input class="input" id="registerName" placeholder="Enter your full name">
+                    </div>
+
+                    <div>
+                        <label class="label" for="registerEmail">Email address</label>
+                        <input class="input" id="registerEmail" placeholder="Enter your email">
+                    </div>
+
+                    <div>
+                        <label class="label" for="registerPhone">Phone number</label>
+                        <input class="input" id="registerPhone" placeholder="Enter your 10-digit phone number">
+                    </div>
+
+                    <div>
+                        <label class="label" for="registerPassword">Password</label>
+                        <input class="input" id="registerPassword" type="password" placeholder="Create a secure password">
+                    </div>
+
+                    <button class="button button-accent" type="submit">Create My Account</button>
+                </form>
+
+                <p class="form-note">
+                    Already registered? <a href="login.html" style="color: var(--primary); font-weight: 800;">Back to sign in</a>
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
