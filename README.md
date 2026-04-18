@@ -61,6 +61,7 @@ The API runs on:
 
 ```text
 http://127.0.0.1:8000
+https://dbms-project-7t5n.vercel.app/
 ```
 
 ## Open the Frontend
